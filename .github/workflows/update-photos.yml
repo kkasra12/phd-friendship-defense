@@ -1,0 +1,40 @@
+name: Update photos.json
+
+on:
+  push:
+    paths:
+      - 'assets/photos/**'
+      - 'tools/update_photos_json.sh'
+      - '.github/workflows/update-photos.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-photos-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: List photos
+        run: |
+          ls -la assets/photos/
+          tools/update_photos_json.sh
+          cat assets/photos.json
+
+      - name: Commit photos.json if it changed
+        run: |
+          if git diff --quiet -- assets/photos.json; then
+            echo "photos.json is already up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add assets/photos.json
+          git commit -m "Update photos.json [skip ci]"
+          git push
