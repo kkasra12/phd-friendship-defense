@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- Strict, self-only policy: no third-party scripts, fonts, analytics or requests. -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#060c1f">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="One final experiment for a freshly minted Doctor of hydrogen.">
+  <title>The Final Defense: From H₂ to PhD</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/space-grotesk-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/anton-latin-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <!-- ===== Decorative lab background (electrolysis bubbles + molecules) ===== -->
+  <div class="lab-bg" aria-hidden="true">
+    <div class="lab-bg__grid"></div>
+    <div class="lab-bg__glow lab-bg__glow--a"></div>
+    <div class="lab-bg__glow lab-bg__glow--b"></div>
+    <div class="bubbles">
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <!-- ===== Top HUD: title + battery that charges across the five screens ===== -->
+  <header class="hud">
+    <div class="hud__brand">
+      <span class="hud__logo" aria-hidden="true"><span>H<sub>2</sub></span></span>
+      <span class="hud__title">The Final Defense<span class="hud__subtitle">From H<sub>2</sub> to PhD</span></span>
+    </div>
+    <div class="hud__power">
+      <span class="hud__phase" id="hud-phase">Phase 1/5</span>
+      <div class="battery" id="battery" role="progressbar" aria-label="Experiment charge"
+           aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="0% charged">
+        <span class="battery__body">
+          <span class="battery__fill"></span>
+          <svg class="battery__bolt" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg>
+        </span>
+        <span class="battery__cap"></span>
+      </div>
+      <span class="battery__pct" id="battery-pct" aria-hidden="true">0%</span>
+    </div>
+  </header>
+
+  <main id="main" class="screens">
+
+    <!-- =====================================================================
+         SCREEN 1 — WELCOME
+         ===================================================================== -->
+    <section class="screen is-active" id="screen-1" aria-labelledby="s1-title">
+      <div class="screen__inner">
+        <div class="hero">
+          <p class="eyebrow"><span class="eyebrow__dot"></span>Final experiment</p>
+
+          <!-- Decorative H₂ molecule -->
+          <svg class="molecule" viewBox="0 0 200 120" aria-hidden="true">
+            <defs>
+              <radialGradient id="atomA" cx="35%" cy="30%" r="70%">
+                <stop offset="0%" stop-color="#bff4ff"/><stop offset="60%" stop-color="#3fe0ff"/><stop offset="100%" stop-color="#1667c9"/>
+              </radialGradient>
+              <radialGradient id="atomB" cx="35%" cy="30%" r="70%">
+                <stop offset="0%" stop-color="#fff2c4"/><stop offset="60%" stop-color="#ffc94d"/><stop offset="100%" stop-color="#c47a00"/>
+              </radialGradient>
+            </defs>
+            <g class="molecule__orbit"><ellipse cx="100" cy="60" rx="92" ry="30"/><circle class="molecule__electron" cx="192" cy="60" r="4"/></g>
+            <line class="molecule__bond" x1="68" y1="60" x2="132" y2="60"/>
+            <circle cx="62" cy="60" r="30" fill="url(#atomA)"/>
+            <circle cx="138" cy="60" r="30" fill="url(#atomB)"/>
+            <text x="62" y="70" class="molecule__label">H</text>
+            <text x="138" y="70" class="molecule__label">H</text>
+          </svg>
+
+          <h1 class="title" id="s1-title" tabindex="-1">Congratulations, Doctor! <span aria-hidden="true">🎓</span></h1>
+          <p class="lead">You survived your thesis defense. Unfortunately, there's one final experiment left.</p>
+        </div>
+
+        <div class="warning-panel">
+          <p class="warning-panel__tag"><span aria-hidden="true">⚠</span> Mandatory lab instruction</p>
+          <p class="mega">Make sure to finish this experiment completely!</p>
+          <p class="mega mega--gold">The surprise is at the end. <span class="mega__gift" aria-hidden="true">🎁</span></p>
+        </div>
+
+        <!-- <div class="console" aria-label="Experiment initialization console">
+          <div class="console__bar" aria-hidden="true">
+            <span class="console__dots"><i></i><i></i><i></i></span>
+            <span class="console__name">final_experiment.sh</span>
+          </div>
+          <ol class="console__lines console__lines--boot">
+            <li><span class="c-prompt">$</span> ./final_experiment --subject=<span class="c-str" data-doctor-name>"Doctor"</span> --mode=celebrate</li>
+            <li>Loading subject <span class="c-fill"></span> <span class="c-ok">✓ freshly defended</span></li>
+            <li><span>Calibrating H<sub>2</sub> sensors</span> <span class="c-fill"></span> <span class="c-ok">✓ 700 bar</span></li>
+            <li>Contacting supervisor <span class="c-fill"></span> <span class="c-warn">⚠ out of office</span></li>
+            <li>Coffee reserves <span class="c-fill"></span> <span class="c-err">✗ critically low</span></li>
+            <li>Sarcasm module <span class="c-fill"></span> <span class="c-ok">✓ 100%</span></li>
+            <li><span class="c-prompt">›</span> Ready. Awaiting brave volunteer<span class="c-caret" aria-hidden="true"></span></li>
+          </ol>
+          <dl class="readouts">
+            <div><dt>Subject</dt><dd data-doctor-name>Doctor</dd></div>
+            <div><dt>Status</dt><dd class="is-ok">Defended ✓</dd></div>
+            <div><dt>Sleep debt</dt><dd>≈ 4 years</dd></div>
+            <div><dt>Lab badge</dt><dd id="badge-status">Checking…</dd></div>
+          </dl>
+        </div> -->
+
+        <p class="joke">
+          <strong>Estimated duration:</strong> 2–3 minutes.<br>
+          <strong>Estimated emotional damage:</strong> irreversible.
+        </p>
+
+        <div class="actions">
+          <button class="btn btn--primary btn--xl" type="button" data-next>
+            <span>Begin the Final Experiment</span>
+            <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         SCREEN 2 — SCIENTIFIC QUALIFICATION EXAMINATION
+         (Questions & feedback live in js/quiz.js)
+         ===================================================================== -->
+    <section class="screen" id="screen-2" aria-labelledby="s2-title" hidden>
+      <div class="screen__inner">
+        <p class="eyebrow"><span class="eyebrow__dot"></span>Phase 2 · Qualification exam</p>
+        <h2 class="title title--md" id="s2-title" tabindex="-1">Scientific Qualification Examination</h2>
+        <p class="lead">Three questions. No pressure. The committee is definitely not judging you. <span aria-hidden="true">👀</span></p>
+
+        <div class="quiz" id="quiz">
+          <div class="quiz__card" id="quiz-card">
+            <div class="quiz__meta">
+              <span class="quiz__count" id="quiz-count">Question 1 of 3</span>
+              <span class="quiz__pips" aria-hidden="true"><i></i><i></i><i></i></span>
+            </div>
+            <h3 class="quiz__question" id="quiz-question" tabindex="-1"></h3>
+            <div class="quiz__options" id="quiz-options" role="group" aria-labelledby="quiz-question"></div>
+            <div class="quiz__feedback" id="quiz-feedback" aria-live="polite"></div>
+            <div class="actions actions--tight">
+              <button class="btn btn--primary" type="button" id="quiz-next" hidden>
+                <span>Next question</span>
+                <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="quiz__done" id="quiz-done" hidden>
+            <div class="stamp stamp--red" aria-hidden="true">Major<br>revisions</div>
+            <p class="quiz__score" id="quiz-score"></p>
+            <p class="result-line" id="quiz-done-text" tabindex="-1">Scientific qualification complete. Reviewer #2 has requested major revisions.</p>
+            <div class="actions">
+              <button class="btn btn--primary" type="button" data-next>
+                <span>Submit revisions anyway</span>
+                <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         SCREEN 3 — EXPERIMENTAL PHOTO EVIDENCE
+         (Photos are listed in assets/photos.json)
+         ===================================================================== -->
+    <section class="screen" id="screen-3" aria-labelledby="s3-title" hidden>
+      <div class="screen__inner">
+        <p class="eyebrow"><span class="eyebrow__dot"></span>Phase 3 · Exhibit A</p>
+        <h2 class="title title--md" id="s3-title" tabindex="-1">Apparently, there is evidence that you occasionally left the laboratory.</h2>
+
+        <div class="gallery" id="gallery" role="region" aria-roledescription="slideshow" aria-label="Photo evidence">
+          <div class="gallery__frame" id="gallery-frame">
+            <div class="gallery__viewport" id="gallery-viewport" tabindex="0"
+                 aria-label="Photo evidence. Use left and right arrow keys or swipe to browse.">
+              <div class="gallery__loading" aria-hidden="true"><span class="spinner"></span></div>
+            </div>
+            <button class="gallery__nav gallery__nav--prev" type="button" id="gallery-prev" aria-label="Previous photo">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+            </button>
+            <button class="gallery__nav gallery__nav--next" type="button" id="gallery-next" aria-label="Next photo">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+            </button>
+            <p class="gallery__counter" id="gallery-counter" aria-live="polite" aria-atomic="true"></p>
+            <span class="gallery__corner gallery__corner--tl" aria-hidden="true"></span>
+            <span class="gallery__corner gallery__corner--br" aria-hidden="true"></span>
+          </div>
+
+          <div class="gallery__empty" id="gallery-empty" hidden>
+            <p class="gallery__empty-icon" aria-hidden="true">🔬</p>
+            <p class="gallery__empty-title">No photographic evidence found.</p>
+            <p>Either the subject truly never left the lab, or the evidence is still being processed.</p>
+          </div>
+        </div>
+
+        <p class="result-line">Evidence reviewed. We are unable to confirm that a healthy work-life balance ever existed.</p>
+
+        <div class="actions">
+          <button class="btn btn--primary" type="button" data-next>
+            <span>Run damage assessment</span>
+            <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         SCREEN 4 — PhD DAMAGE ASSESSMENT
+         Edit metric labels / values (data-value) and log lines right here.
+         ===================================================================== -->
+    <section class="screen" id="screen-4" aria-labelledby="s4-title" hidden>
+      <div class="screen__inner">
+        <p class="eyebrow"><span class="eyebrow__dot"></span>Phase 4 · Diagnostics</p>
+        <h2 class="title title--md" id="s4-title" tabindex="-1">PhD Damage Assessment</h2>
+        <p class="disclaimer"><span aria-hidden="true">🧪</span> All values are fictional and purely comedic. No real measurements were harmed.</p>
+
+        <div class="dashboard">
+          <div class="metrics" id="metrics">
+            <div class="metric" data-value="99" data-tone="danger">
+              <div class="metric__head"><span class="metric__label" id="m1">Psychological damage</span><span class="metric__value"><span data-count>0</span>%</span></div>
+              <div class="metric__bar" role="meter" aria-labelledby="m1" aria-valuemin="0" aria-valuemax="100" aria-valuenow="99"><span class="metric__fill"></span></div>
+            </div>
+            <div class="metric" data-value="94" data-tone="warn">
+              <div class="metric__head"><span class="metric__label" id="m2">Unexplained experimental failures</span><span class="metric__value"><span data-count>0</span>%</span></div>
+              <div class="metric__bar" role="meter" aria-labelledby="m2" aria-valuemin="0" aria-valuemax="100" aria-valuenow="94"><span class="metric__fill"></span></div>
+            </div>
+            <div class="metric" data-value="100" data-tone="danger">
+              <div class="metric__head"><span class="metric__label" id="m3">Reviewer #2 trauma</span><span class="metric__value"><span data-count>0</span>%</span></div>
+              <div class="metric__bar" role="meter" aria-labelledby="m3" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><span class="metric__fill"></span></div>
+            </div>
+            <div class="metric" data-value="91" data-tone="warn">
+              <div class="metric__head"><span class="metric__label" id="m4">Sleep deprivation</span><span class="metric__value"><span data-count>0</span>%</span></div>
+              <div class="metric__bar" role="meter" aria-labelledby="m4" aria-valuemin="0" aria-valuemax="100" aria-valuenow="91"><span class="metric__fill"></span></div>
+            </div>
+            <div class="metric" data-value="7" data-tone="low">
+              <div class="metric__head"><span class="metric__label" id="m5">Remaining enthusiasm for hydrogen</span><span class="metric__value"><span data-count>0</span>%</span></div>
+              <div class="metric__bar" role="meter" aria-labelledby="m5" aria-valuemin="0" aria-valuemax="100" aria-valuenow="7"><span class="metric__fill"></span></div>
+            </div>
+          </div>
+
+          <div class="vitals" aria-hidden="true">
+            <span class="vitals__label">Subject vitals</span>
+            <svg class="vitals__ecg" viewBox="0 0 300 40" preserveAspectRatio="none">
+              <path d="M0 22 H60 L70 22 L76 8 L84 36 L92 4 L100 30 L106 22 H170 L180 22 L186 12 L194 34 L202 6 L210 26 L216 22 H300"/>
+            </svg>
+            <span class="vitals__state">somehow alive</span>
+          </div>
+
+          <div class="console console--log">
+            <div class="console__bar" aria-hidden="true">
+              <span class="console__dots"><i></i><i></i><i></i></span>
+              <span class="console__name">research_log.txt</span>
+            </div>
+            <ol class="log" id="research-log" role="log" aria-live="polite" aria-label="Research log">
+              <li class="log__line" data-level="warning" hidden>Experiment failed for unknown reasons.</li>
+              <li class="log__line" data-level="error" hidden>Sample degraded overnight.</li>
+              <li class="log__line" data-level="critical" hidden>Reviewer #2 has submitted 47 comments.</li>
+              <li class="log__line" data-level="warning" hidden>Hydrogen leak detected. Motivation not found.</li>
+              <li class="log__line" data-level="error" hidden>Work-life balance has stopped responding.</li>
+              <li class="log__line" data-level="success" hidden>Thesis defended. System unexpectedly stable.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="conclusion is-pending" id="conclusion">
+          <p class="conclusion__tag">Conclusion</p>
+          <p>After years of hydrogen exposure, failed experiments, endless corrections, and severe academic trauma, the subject has somehow survived.</p>
+          <p class="conclusion__strong">Further PhD experiments are strongly discouraged.</p>
+        </div>
+
+        <div class="actions is-pending" id="compensation-actions">
+          <button class="btn btn--gold btn--xl" type="button" id="request-compensation">
+            <span>Request Compensation <span aria-hidden="true">💸</span></span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         SCREEN 5 — FINANCIAL COMPENSATION APPROVED
+         ===================================================================== -->
+    <section class="screen screen--finale" id="screen-5" aria-labelledby="s5-title" hidden>
+      <div class="screen__inner">
+        <p class="eyebrow eyebrow--gold"><span class="eyebrow__dot"></span>Phase 5 · Grant office</p>
+        <h2 class="title title--gold" id="s5-title" tabindex="-1">Your grant has been approved!</h2>
+        <p class="lead">After reviewing the psychological and financial damage caused by your PhD, the committee has authorized compensation.</p>
+
+        <article class="grant" aria-label="Grant certificate">
+          <div class="grant__seal" aria-hidden="true"><span>H<sub>2</sub></span></div>
+          <p class="grant__kicker">Official graduation grant</p>
+          <dl class="grant__rows">
+            <div><dt>Grant no.</dt><dd>PHD-H2-∞-FINAL</dd></div>
+            <div><dt>Recipient</dt><dd data-doctor-name>Doctor</dd></div>
+            <div><dt>Funding body</dt><dd>The Committee of Friends</dd></div>
+            <div><dt>Justification</dt><dd>Years of H<sub>2</sub> exposure, 47 reviewer comments, chronic coffee dependency</dd></div>
+            <div><dt>Status</dt><dd class="is-gold">Approved ✓</dd></div>
+          </dl>
+          <div class="stamp stamp--gold grant__stamp" aria-hidden="true">Approved</div>
+        </article>
+
+        <p class="catch-hint"><span aria-hidden="true">💡</span> Catch any flying <span aria-hidden="true">💸</span> money to collect your grant.</p>
+
+        <div class="gift-error" id="gift-error" role="alert" hidden></div>
+
+        <!-- <div class="actions actions--stack">
+          <button class="btn btn--gold" type="button" id="claim-fallback">
+            <span>Too fast? Collect it here <span aria-hidden="true">💰</span></span>
+          </button>
+          <button class="btn btn--ghost" type="button" id="toggle-money" aria-pressed="false">Pause the money</button>
+        </div> -->
+
+        <p class="final-message">No more experiments. No more reviewers. No more deadlines. <span class="heart">❤️</span></p>
+
+        <button class="link-btn" type="button" id="restart">↺ Repeat the experiment</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Flying money (clickable) + confetti layers for the finale -->
+  <div class="money-layer" id="money-layer" role="group" aria-label="Flying money — each one collects your grant (opens in a new tab)" hidden></div>
+  <div class="confetti-layer" id="confetti-layer" aria-hidden="true"></div>
+
+  <!-- Final celebration transition -->
+  <div class="overlay" id="processing" hidden>
+    <div class="overlay__card" role="status" aria-live="polite">
+      <div class="overlay__atom" aria-hidden="true"><span></span><span></span><span></span></div>
+      <p class="overlay__step" id="processing-step">Submitting compensation request…</p>
+      <div class="overlay__bar" aria-hidden="true"><span></span></div>
+    </div>
+  </div>
+
+  <noscript>
+    <div class="noscript">This experiment needs JavaScript enabled. Even hydrogen needs a little activation energy. ⚡</div>
+  </noscript>
+</body>
+</html>

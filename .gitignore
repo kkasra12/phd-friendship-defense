@@ -1,0 +1,19 @@
+# OS / editor clutter
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# Never commit secrets: gift tokens, full redemption links, QR source files
+*.secret
+*.secret.*
+secrets/
+.env
+.env.*
+token.txt
+qr-*.png
+qr-*.svg
+
+# Original full-resolution photos you don't want to publish (keep resized copies in assets/photos/)
+originals/
