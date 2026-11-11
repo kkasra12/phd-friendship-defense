@@ -4,7 +4,7 @@
  * and the final celebration transition.
  */
 import { CONFIG } from './config.js';
-import { captureTokenFromUrl, hasValidToken, initGift, startCelebration, stopCelebration } from './gift.js';
+import { captureTokenFromUrl, initGift, renderGiftMessage, startCelebration, stopCelebration, tokenProblem } from './gift.js';
 import { initQuiz } from './quiz.js';
 import { initGallery } from './gallery.js';
 
@@ -247,22 +247,26 @@ function applyDoctorName() {
   });
 }
 
-function showBadgeStatus() {
-  const badge = document.getElementById('badge-status');
-  if (hasValidToken()) {
-    badge.textContent = 'QR verified ✓';
-    badge.className = 'is-ok';
-  } else {
-    badge.textContent = 'Not detected — open via the postcard QR code';
-    badge.className = 'is-warn';
+/** Tell the visitor right away if they didn't arrive through the postcard QR link. */
+function showLinkStatus() {
+  const problem = tokenProblem();
+
+  const badge = document.getElementById('badge-status'); // optional (lab console)
+  if (badge) {
+    badge.textContent = problem ? 'Not detected — open via the postcard QR code' : 'QR verified ✓';
+    badge.className = problem ? 'is-warn' : 'is-ok';
   }
+
+  const notice = document.getElementById('link-notice');
+  if (problem) renderGiftMessage(notice, problem);
+  else if (notice) notice.hidden = true;
 }
 
 const quiz = initQuiz({ onProgress: setScreenProgress });
 const gallery = initGallery({ onProgress: setScreenProgress });
 initGift();
 applyDoctorName();
-showBadgeStatus();
+showLinkStatus();
 setCharge(0);
 
 // Developer shortcut, ONLY on localhost: add &screen=1..5 to the fragment,
