@@ -46,6 +46,12 @@ export function hasValidToken() {
   return typeof token === 'string' && CONFIG.tokenPattern.test(token);
 }
 
+/** Why the current link can't deliver the gift: null (all good), 'missing' or 'invalid'. */
+export function tokenProblem() {
+  if (!token) return 'missing';
+  return hasValidToken() ? null : 'invalid';
+}
+
 /** Explains why a redemption link could not be produced. */
 export class GiftLinkError extends Error {
   constructor(reason) {
@@ -138,8 +144,9 @@ export function initGift() {
   };
   els.hintMarkup = els.hint.innerHTML; // static copy, restored on restart
 
-  els.fallback.addEventListener('click', () => redeem());
-  els.toggle.addEventListener('click', () => {
+  // The fallback / pause buttons are optional — they may be removed from the markup.
+  els.fallback?.addEventListener('click', () => redeem());
+  els.toggle?.addEventListener('click', () => {
     const paused = els.layer.classList.toggle('is-paused');
     els.toggle.setAttribute('aria-pressed', String(paused));
     els.toggle.textContent = paused ? 'Resume the money' : 'Pause the money';
@@ -174,12 +181,18 @@ function redeem(sourceEl) {
   burstConfetti(40);
 }
 
-function showError(reason) {
+/** Fill a message box with the friendly explanation for `reason`. */
+export function renderGiftMessage(target, reason) {
+  if (!target) return;
   const msg = ERROR_MESSAGES[reason] || ERROR_MESSAGES.config;
   const title = document.createElement('strong');
   title.textContent = msg.title;
-  els.error.replaceChildren(title, document.createTextNode(msg.text));
-  els.error.hidden = false;
+  target.replaceChildren(title, document.createTextNode(msg.text));
+  target.hidden = false;
+}
+
+function showError(reason) {
+  renderGiftMessage(els.error, reason);
 }
 
 function hideError() {
@@ -247,7 +260,10 @@ function burstConfetti(count, { loop = false } = {}) {
 export function startCelebration() {
   if (celebrating) return;
   celebrating = true;
-  hideError();
+  // Without a usable token, say so up front instead of waiting for a click.
+  const problem = tokenProblem();
+  if (problem) showError(problem);
+  else hideError();
   createMoney();
   els.layer.hidden = false;
   burstConfetti(90);
@@ -260,8 +276,10 @@ export function stopCelebration() {
   els.layer.hidden = true;
   els.layer.replaceChildren();
   els.layer.classList.remove('is-paused');
-  els.toggle.setAttribute('aria-pressed', 'false');
-  els.toggle.textContent = 'Pause the money';
+  if (els.toggle) {
+    els.toggle.setAttribute('aria-pressed', 'false');
+    els.toggle.textContent = 'Pause the money';
+  }
   els.confetti.replaceChildren();
   els.hint.innerHTML = els.hintMarkup;
   hideError();
