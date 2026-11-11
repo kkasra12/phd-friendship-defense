@@ -28,8 +28,8 @@ secret part of the link (the **token**) reaches the page through the QR code. In
 
    Also set `doctorName` if you like. Never put the real token in this file
    (details in [1. Configure](#1-configure-jsconfigjs)).
-2. **Add your photos** to `assets/photos/` and list them in `assets/photos.json`
-   (see [2. Add photos](#2-add-photos)).
+2. **Add your photos** to `assets/photos/`. A GitHub Action updates `assets/photos.json`
+   for you (see [2. Add photos](#2-add-photos)).
 3. **Deploy** the repo to GitHub Pages (see [4. Deploy to GitHub Pages](#4-deploy-to-github-pages)).
 4. **Build the secret link** by adding `#token=` and the token to the end of your site URL.
    For the Revolut link `https://revolut.me/p/AbC123xyz` the token is `AbC123xyz`, so
@@ -77,10 +77,12 @@ js/quiz.js            Quiz questions and feedback (edit here)
 js/gallery.js         Photo slideshow
 js/gift.js            Token handling, redemption link, flying money, confetti
 assets/photos/        Your photos
-assets/photos.json    Ordered list of photo filenames
+assets/photos.json    Ordered list of photo filenames (generated)
 assets/fonts/         Fonts stored in the repo (SIL Open Font License)
 assets/favicon.svg
 tools/make_qr.py      Makes the postcard QR code on your own computer
+tools/update_photos_json.sh  Rebuilds photos.json from assets/photos/
+.github/workflows/    GitHub Action that runs it when photos change
 .nojekyll             Tells GitHub Pages to serve files as-is
 ```
 
@@ -108,7 +110,15 @@ provider's API.
 ## 2. Add photos
 
 1. Copy your photos into `assets/photos/`, for example `001.jpg`, `002.jpg`, `beach-2023.jpg`.
-2. List them in `assets/photos.json` in the order they should appear:
+2. Commit and push. The **Update photos.json** GitHub Action
+   (`.github/workflows/update-photos.yml`) lists the folder, rewrites
+   `assets/photos.json`, and commits it back to the branch. Photos appear in
+   natural filename order (`001`, `002`, … `010`), so number your files to set the order.
+
+   To regenerate it yourself (needs `jq`), run `tools/update_photos_json.sh`. You can
+   also start the Action by hand from the repo's **Actions** tab.
+
+   The generated file looks like this:
 
    ```json
    {
@@ -120,9 +130,7 @@ provider's API.
    }
    ```
 
-   A plain array (`["001.jpg", "002.jpg"]`) also works.
-3. Delete the three sample files `example-1.svg`, `example-2.svg` and `example-3.svg`
-   and remove them from `photos.json`.
+   If you edit `photos.json` by hand, the next photo push overwrites it.
 
 Tips:
 
