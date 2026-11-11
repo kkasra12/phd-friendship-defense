@@ -24,7 +24,7 @@ export const CONFIG = Object.freeze({
    * "{token}" is replaced at click time with encodeURIComponent(token).
    * This is a fake example domain — replace it with the provider's real one.
    */
-  redemptionUrlTemplate: 'https://gift-provider.example/redeem/{token}',
+  redemptionUrlTemplate: 'https://revolut.me/p/{token}',
 
   /** Name of the fragment parameter that carries the token (#token=...). */
   tokenParam: 'token',
